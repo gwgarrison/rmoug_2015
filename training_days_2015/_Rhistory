@@ -1,0 +1,149 @@
+load("C:/Users/Gary/Google Drive/Presentations_Papers/RMOUG 2015/training_days_2015/cdc.rda")
+sw <- cdc[cdc$weight2 < 999,c("x.state","weight2")]
+# get average weight for by state
+swa <- ddply(sw,.(x.state),summarize,avg.weight = mean(weight2))
+names(swa) <- c("fips","avg.weight")
+library( maps);library(ggplot2);library( plyr)
+sw <- cdc[cdc$weight2 < 999,c("x.state","weight2")]
+# get average weight for by state
+swa <- ddply(sw,.(x.state),summarize,avg.weight = mean(weight2))
+names(swa) <- c("fips","avg.weight")
+# merge state weight data with fips
+sf <- data(state.fips)
+sf <- state.fips[,c("fips","polyname")]
+sf$polyname <- as.character(sf$polyname)
+sf$polyname[grep('massachusetts:',sf$polyname)] <- 'massachusetts'
+sf$polyname[grep('michigan:',sf$polyname)] <- 'michigan'
+sf$polyname[grep('new york:',sf$polyname)] <- 'new york'
+sf$polyname[grep('north carolina:',sf$polyname)] <- 'north carolina'
+sf$polyname[grep('virginia:',sf$polyname)] <- 'virginia'
+sf$polyname[grep('washington:',sf$polyname)] <- 'washington'
+sf <- unique(sf)
+names(sf) <- c("fips","state")
+swa <- unique(merge(swa,sf))
+weight_map<- merge(states_map,swa,by.x="region",by.y="state")
+ggplot( weight_map, aes( x = long, y = lat, group = group, fill = avg.weight, )) +
+geom_polygon( colour ="black") + coord_map("polyconic") + ggtitle("Weight Map") +
+xlab("") + ylab("")
+swa[order(swa$avg.weight),c(3,2)]
+states_map <- map_data("state")
+sw <- cdc[cdc$weight2 < 999,c("x.state","weight2")]
+# get average weight for by state
+swa <- ddply(sw,.(x.state),summarize,avg.weight = mean(weight2))
+names(swa) <- c("fips","avg.weight")
+# merge state weight data with fips
+sf <- data(state.fips)
+sf <- state.fips[,c("fips","polyname")]
+sf$polyname <- as.character(sf$polyname)
+sf$polyname[grep('massachusetts:',sf$polyname)] <- 'massachusetts'
+sf$polyname[grep('michigan:',sf$polyname)] <- 'michigan'
+sf$polyname[grep('new york:',sf$polyname)] <- 'new york'
+sf$polyname[grep('north carolina:',sf$polyname)] <- 'north carolina'
+sf$polyname[grep('virginia:',sf$polyname)] <- 'virginia'
+sf$polyname[grep('washington:',sf$polyname)] <- 'washington'
+sf <- unique(sf)
+names(sf) <- c("fips","state")
+swa <- unique(merge(swa,sf))
+weight_map<- merge(states_map,swa,by.x="region",by.y="state")
+ggplot( weight_map, aes( x = long, y = lat, group = group, fill = avg.weight, )) +
+geom_polygon( colour ="black") + coord_map("polyconic") + ggtitle("Weight Map") +
+xlab("") + ylab("")
+swa[order(swa$avg.weight),c(3,2)]
+swa <- ddply(sw,.(x.state),summarize,avg.weight = mean(weight2),median.weight = median(weight2))
+swa <- ddply(sw,.(x.state),summarize,avg.weight = mean(weight2),median.weight = median(weight2))
+swa
+names(swa) <- c("fips","avg.weight","median.weight")
+# merge state weight data with fips
+sf <- data(state.fips)
+sf <- state.fips[,c("fips","polyname")]
+sf$polyname <- as.character(sf$polyname)
+sf$polyname[grep('massachusetts:',sf$polyname)] <- 'massachusetts'
+sf$polyname[grep('michigan:',sf$polyname)] <- 'michigan'
+sf$polyname[grep('new york:',sf$polyname)] <- 'new york'
+sf$polyname[grep('north carolina:',sf$polyname)] <- 'north carolina'
+sf$polyname[grep('virginia:',sf$polyname)] <- 'virginia'
+sf$polyname[grep('washington:',sf$polyname)] <- 'washington'
+sf <- unique(sf)
+names(sf) <- c("fips","state")
+swa <- unique(merge(swa,sf))
+weight_map<- merge(states_map,swa,by.x="region",by.y="state")
+ggplot( weight_map, aes( x = long, y = lat, group = group, fill = avg.weight, )) +
+geom_polygon( colour ="black") + coord_map("polyconic") + ggtitle("Weight Map") +
+xlab("") + ylab("")
+swa[order(swa$avg.weight),c(3,2,4)]
+# from "R Graphics Cookbook", by Winston Chang
+theme_clean <- function( base_size = 12) {
+require( grid) # Needed for unit() function
+theme_grey( base_size) %+ replace%
+theme( axis.title = element_blank(),
+axis.text = element_blank(),
+panel.background = element_blank(),
+panel.grid = element_blank(),
+axis.ticks.length = unit( 0, "cm"),
+axis.ticks.margin = unit( 0, "cm"),
+panel.margin = unit( 0, "lines"),
+plot.margin = unit( c( 0, 0, 0, 0), "lines"),
+complete = TRUE ) }
+library( maps);library(ggplot2);library( plyr)
+# For map data # Get map data for USA
+states_map <- map_data("state")
+# load cdc data
+load("C:/Users/Gary/Google Drive/Presentations_Papers/RMOUG 2015/training_days_2015/cdc.rda")
+sw <- cdc[cdc$weight2 < 999,c("x.state","weight2")]
+# get average weight for by state
+swa <- ddply(sw,.(x.state),summarize,avg.weight = mean(weight2),median.weight = median(weight2))
+names(swa) <- c("fips","avg.weight","median.weight")
+# merge state weight data with fips
+sf <- data(state.fips)
+sf <- state.fips[,c("fips","polyname")]
+sf$polyname <- as.character(sf$polyname)
+sf$polyname[grep('massachusetts:',sf$polyname)] <- 'massachusetts'
+sf$polyname[grep('michigan:',sf$polyname)] <- 'michigan'
+sf$polyname[grep('new york:',sf$polyname)] <- 'new york'
+sf$polyname[grep('north carolina:',sf$polyname)] <- 'north carolina'
+sf$polyname[grep('virginia:',sf$polyname)] <- 'virginia'
+sf$polyname[grep('washington:',sf$polyname)] <- 'washington'
+sf <- unique(sf)
+names(sf) <- c("fips","state")
+swa <- unique(merge(swa,sf))
+weight_map<- merge(states_map,swa,by.x="region",by.y="state")
+ggplot( weight_map, aes( x = long, y = lat, group = group, fill = avg.weight, )) +
+geom_polygon( colour ="black") + coord_map("polyconic") + ggtitle("Weight Map") +
+xlab("") + ylab("") + theme_clean()
+ggplot( weight_map, aes( x = long, y = lat, group = group, fill = avg.weight, )) +
+geom_polygon( colour ="black") + coord_map("polyconic") + ggtitle("Weight Map") +
+xlab("") + ylab("") + panel.background = element_blank() + planel.grid = element_blank()
+ggplot( weight_map, aes( x = long, y = lat, group = group, fill = avg.weight, )) +
+geom_polygon( colour ="black") + coord_map("polyconic") + ggtitle("Weight Map") +
+xlab("") + ylab("") + panel.background = element_blank() + panel.grid = element_blank()
+ggplot( weight_map, aes( x = long, y = lat, group = group, fill = avg.weight, )) +
+geom_polygon( colour ="black") + coord_map("polyconic") + ggtitle("Weight Map") +
+xlab("") + ylab("") + theme(panel.background = element_blank() ,panel.grid = element_blank())
+ggplot( weight_map, aes( x = long, y = lat, group = group, fill = avg.weight, )) +
+geom_polygon( colour ="black") + coord_map("polyconic") + ggtitle("Weight Map") +
+xlab("") + ylab("") + theme(panel.background = element_blank() ,panel.grid = element_blank(),
+axis.text = element_blank())
+ggplot( weight_map, aes( x = long, y = lat, group = group, fill = avg.weight, )) +
+geom_polygon( colour ="black") + coord_map("polyconic") + ggtitle("Weight Map") +
+xlab("") + ylab("") + theme(panel.background = element_blank() ,panel.grid = element_blank(),
+axis.text = element_blank(),axis.ticks = unit (0,"cm"))
+geom_polygon( colour ="black") + coord_map("polyconic") + ggtitle("Weight Map") +
+xlab("") + ylab("") + theme(panel.background = element_blank() ,panel.grid = element_blank(),
+axis.text = element_blank(),axis.ticks.length = unit (0,"cm"))
+theme_clean <- function( base_size = 12) {
+require( grid) # Needed for unit() function
+theme_grey( base_size) %+replace%
+theme( axis.title = element_blank(),
+axis.text = element_blank(),
+panel.background = element_blank(),
+panel.grid = element_blank(),
+axis.ticks.length = unit( 0, "cm"),
+axis.ticks.margin = unit( 0, "cm"),
+panel.margin = unit( 0, "lines"),
+plot.margin = unit( c( 0, 0, 0, 0), "lines"),
+complete = TRUE ) }
+ggplot( weight_map, aes( x = long, y = lat, group = group, fill = avg.weight, )) +
+geom_polygon( colour ="black") + coord_map("polyconic") + ggtitle("Weight Map") +
+xlab("") + ylab("") + theme_clean()
+?ggtitle
+source("theme_clean.R")
