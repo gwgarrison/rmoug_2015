@@ -27,8 +27,11 @@ g <- g +geom_smooth(method = 'lm')
 g
 g <- g + geom_smooth(method = 'lm') 
 g
-g <- g + geom_smooth(color = "green") 
+# change the geom to a line
+g <- g + geom_smooth(color = "green") + geom_line()
 g
+
+
 
 # join batting and fielding datasets to get postion
 b <- b %>%
