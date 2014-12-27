@@ -28,9 +28,18 @@ h.agg$flight_quant <- cut(h.agg$flight_count,breaks = quantile(h.agg$flight_coun
             
 h1 <- filter(h.agg,lon > -140 & flight_count > 1)
 
-# plot 
-ggplot(data = h1,aes(x = lon,y = lat)) + 
+h.busy <- as.data.frame(h1) %>% filter(flight_count > quantile(flight_count,.9) ) %>%
+  arrange(flight_count)
+  
+ 
+
+# plot destination airports with point size determined by 
+# how busy the destination
+g <- ggplot(data = h1,aes(x = lon,y = lat)) + 
   geom_point(aes(size = flight_quant),color = "blue") + 
   borders("state") + ggtitle("Destination Airports") + theme_clean() +
-  scale_size_discrete(name = "Destination Count \nQuantile")
+  scale_size_discrete(name = "Busiest Destinations") 
+g
 
+g.busy <-  g +  geom_text(data = h.busy,aes(x = lon + 2,y = lat +.5,label = name))
+g.busy

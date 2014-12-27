@@ -6,6 +6,7 @@ source("1-setup.R")
 b <- tbl_df(Batting)
 f <- tbl_df(Fielding)
 t <- tbl_df(Teams)
+m <- tbl_df(Master)
 
 # create data frame of batting data, adding position from the
 # Fielding dataset
@@ -43,4 +44,15 @@ b <- b %>%
             sb = sum(SB), cs = sum(CS), bb = sum(BB), so = sum(SO)) %>%
   arrange(playerID,yearID)
   
+# get state data
+s <- tbl_df(map_data("state"))
+
+data(state.fips)
+
+mb <- select(m,playerID,birthState)
+sf <- tbl_df(state.fips)
+sf$polyname <- gsub(":main","",sf$polyname)
+
+mbsf <- inner_join(mb,sf,by = c("birthState" = "abb"))
+
 
