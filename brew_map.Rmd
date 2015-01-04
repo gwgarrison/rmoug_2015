@@ -1,0 +1,72 @@
+---
+title: "Where are the Microbreweries in Colorado"
+author: "Gary Garrison"
+#date: "Monday, September 22, 2014"
+output: html_document
+---
+Date: `r date()`
+
+```{r,echo=FALSE}
+suppressMessages(library(maps));suppressMessages(library(ggmap));suppressMessages(library(plyr))
+options(warn=-1)
+
+if (file.exists("F:/play/craft_brewers")){
+  setwd("F:/play/craft_brewers")
+} else if (file.exists("E:/play/craft_brewers")) {
+  setwd("E:/play/craft_brewers")
+} else {
+  stop("Directory does not exists")
+}
+bp <- read.csv("brew_pubs_final.csv",stringsAsFactors=FALSE)
+bp <- bp[,-1]
+names(bp)<- c("Brewery","Type","Address","City","state","zip","lat","lon")
+bp.city <- read.csv("brew_pubs_city.csv",stringsAsFactors=FALSE)
+bp.city <- bp.city[,-1]
+names(bp.city)<- c("City","State","Count","lat","lon")
+
+# get city population data
+city <- read.csv("colorado_cities.csv",stringsAsFactors=FALSE)
+city <- city[,-1]
+city$Population <- gsub(',','',city$Population)
+city$Population <- as.numeric(city$Population)
+city$City <- toupper(city$City)
+bp.city <- merge(bp.city,city,all.x=TRUE)
+bp.city$PopulationToPubRatio <- round(bp.city$Population/bp.city$Count)
+```
+
+### Microbrewery Count by City
+```{r microbrewery_city_plot,echo=FALSE,fig.width=9, fig.height=6}
+map <- suppressMessages(get_map(location = 'colorado',zoom = 7,maptype="roadmap"))
+b <- ggmap(map, extent = 'device') + geom_point(aes(x = lon,y = lat,size=bp.city$Count)
+                                           ,data = bp.city,color="red")
+b <- b + labs(size="Microbrewery and Brew Pub Count") + xlab("") + ylab("")
+#b
+suppressMessages(b)
+```
+
+### List of Colorado Microbrewery Count by City
+```{r echo=FALSE,comment=NA}
+print(bp.city[order(bp.city$City),c("City","Count","Population","PopulationToPubRatio")],row.names=FALSE)
+```
+
+
+### Microbrewery Locations
+```{r microbrewery_plot,echo=FALSE,fig.width=9, fig.height=6}
+#map <- suppressMessages(get_map(location = 'colorado',zoom = 7,maptype="roadmap"))
+
+brew_map <- ggmap(map, extent = 'device') + geom_point(aes(x = lon,y = lat)
+                                           ,data = bp,color="blue") +
+  xlab("") + ylab("")
+suppressMessages(brew_map)
+```
+
+### List of Colorado Microbrewies
+```{r echo=FALSE,comment=NA}
+options(width = 120)
+print(bp[order(bp$City,bp$Brewery),c("Brewery","Address","City")],row.names=FALSE)
+```
+Microbrewery Data Source:  
+State of Colorado Department of Revenue  
+http://www.colorado.gov/cs/Satellite/Rev-Liquor/LIQ/1209635768152  
+Colorado Population Data Source:  
+http://www.colorado-demographics.com/cities_by_population  

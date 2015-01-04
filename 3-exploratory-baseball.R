@@ -49,10 +49,22 @@ s <- tbl_df(map_data("state"))
 
 data(state.fips)
 
-mb <- select(m,playerID,birthState)
+mb <- m %>%
+#  filter(birthYear < 1930) %>%
+  group_by(birthState) %>%
+  summarize(state_count = n()) %>%
+  arrange(birthState)
+
 sf <- tbl_df(state.fips)
 sf$polyname <- gsub(":main","",sf$polyname)
 
-mbsf <- inner_join(mb,sf,by = c("birthState" = "abb"))
+players.state <- inner_join(mb,sf,by = c("birthState" = "abb"))
+
+players.state.loc <- inner_join(players.state,s,by = c("polyname" = "region"))
+
+ggplot( data = players.state.loc, aes( x = long, y = lat, 
+                                   group = group, fill = state_count)) + 
+  geom_polygon( colour ="black") + coord_map("polyconic") + theme_clean() +
+  ggtitle("Number Baseball Players by State of Birth")
 
 
