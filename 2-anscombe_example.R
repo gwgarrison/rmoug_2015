@@ -1,3 +1,5 @@
+source(1-setup.R)
+library(psych)
 
 attach(anscombe)
 a1 <- data.frame(x1,y1)
