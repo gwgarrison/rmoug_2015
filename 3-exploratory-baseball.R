@@ -29,8 +29,11 @@ g
 g <- g + geom_smooth(method = 'lm') 
 g
 # change the geom to a line
-g <- g + geom_smooth(color = "green") + geom_line()
-g
+gline <- ggplot(data = t.year,aes(x = year,y = hr_game)) + geom_line() +
+  xlab("Year") + ylab("HR/Game") + 
+  ggtitle("Homeruns Per/Game by Year") +
+  geom_vline(xintercept = 2003,color = "red")
+gline 
 
 
 

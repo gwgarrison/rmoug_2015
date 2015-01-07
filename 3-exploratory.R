@@ -14,8 +14,13 @@ g <- ggplot(data = d,aes(x = price)) + geom_histogram() + xlab("Price") +
   facet_wrap(~ cut, ncol = 2)
 g
 
+g <- ggplot(data = d,aes(x = price,fill = color)) + geom_histogram() + xlab("Price") +
+  ylab("Record Count") + ggtitle("Histogram of Diamond Price") + 
+  facet_wrap(~ cut, ncol = 2)
+g
 # a box plot showing cut
-g <- ggplot(data = d, aes(clarity,price, color = clarity )) + geom_boxplot()
+g <- ggplot(data = d, aes(clarity,price, color = clarity )) + geom_boxplot() + 
+  ggtitle("Diamond Price by Clarity")
 g
 #qplot(cut,price, data = d,geom="boxplot",color = cut)  
 
