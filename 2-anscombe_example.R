@@ -1,4 +1,4 @@
-source(1-setup.R)
+source("1-setup.R")
 library(psych)
 
 attach(anscombe)
@@ -25,4 +25,3 @@ plot(a4,pch=18,bg="blue")
 abline(lm(a3$y3~a3$x3),col="red")
 #title("Anscombe's Quartet",outer = TRUE)
 
-ggplot(aes(x = x1,y = y1),data = anscombe) + geom_point()

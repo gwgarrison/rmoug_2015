@@ -68,6 +68,7 @@ players.state.loc <- inner_join(players.state,s,by = c("polyname" = "region"))
 ggplot( data = players.state.loc, aes( x = long, y = lat, 
                                    group = group, fill = state_count)) + 
   geom_polygon( colour ="black") + coord_map("polyconic") + theme_clean() +
-  ggtitle("Number Baseball Players by State of Birth")
+  ggtitle("Number Baseball Players by State of Birth") +
+  scale_fill_continuous("Player Count")
 
 

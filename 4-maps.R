@@ -8,6 +8,7 @@ h <- tbl_df(select(hflights,-Year))
 ap <- tbl_df(select(airports,faa:alt))
 
 h.ap <- inner_join(h,ap,by = c("Dest" = "faa"))
+h.ap <- dplyr::filter(h.ap,lon > -140)
 
 ggplot(data = h.ap,aes(x = lon,y = lat)) + geom_point() + borders("state")
 
@@ -26,9 +27,9 @@ h.agg <- h.ap %>%
 h.agg$flight_quant <- cut(h.agg$flight_count,breaks = quantile(h.agg$flight_count),
                           labels = c(1,2,3,4))
             
-h1 <- filter(h.agg,lon > -140 & flight_count > 1)
+h1 <- dplyr::filter(h.agg,lon > -140 & flight_count > 1)
 
-h.busy <- as.data.frame(h1) %>% filter(flight_count > quantile(flight_count,.9) ) %>%
+h.busy <- as.data.frame(h1) %>% dplyr::filter(flight_count > quantile(flight_count,.9) ) %>%
   arrange(flight_count)
   
  
