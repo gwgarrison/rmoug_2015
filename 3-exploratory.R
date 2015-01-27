@@ -14,14 +14,25 @@ g <- ggplot(data = d,aes(x = price)) + geom_histogram() + xlab("Price") +
   facet_wrap(~ cut, ncol = 2)
 g
 
+# add a fill which is diamond color, note we did not have to add a legend ggplot
+# takes care of this for us
 g <- ggplot(data = d,aes(x = price,fill = color)) + geom_histogram() + xlab("Price") +
   ylab("Record Count") + ggtitle("Histogram of Diamond Price") + 
   facet_wrap(~ cut, ncol = 2)
 g
-# a box plot showing cut
+
+# a box plot showing clarity, oddly the diamonds with better clarity seem to be cheaper
 g <- ggplot(data = d, aes(clarity,price, color = clarity )) + geom_boxplot() + 
   ggtitle("Diamond Price by Clarity")
 g
+
+# like clarity the diamonds with a better cut (Ideal) seem cheaper
+g2 <- ggplot(data = d, aes(x = cut, price,color = cut)) + geom_boxplot() +
+  ggtitle("Diamond Price by Cut") 
+g2
+
+# add a line for the mean price of all diamonds
+g2 + geom_hline(y = mean(d$price),linetype = "dashed")
 #qplot(cut,price, data = d,geom="boxplot",color = cut)  
 
 
@@ -39,12 +50,13 @@ g <- ggplot(data = d,aes(x = carat,y = price)) +
   ggtitle("Price by Carat with Regression Line")
 g
 
+# add some color to see a third variables
+gc <- ggplot(data = d,aes(x = carat,y = price, color = cut)) + 
+  geom_point() + scale_color_brewer(palette = "Set1")
+gc
+
 summary(g)
 
-# get some baseball data
-b <- tbl_df(Batting)
-f <- tbl_df(Fielding)
-bf <- inner_join(b,select(f,playerID,POS),by = "playerID")
 # add some color for 
 ggplot(data = d,aes(x = carat,y = price, color = cut)) + geom_point()
 
@@ -68,12 +80,15 @@ ha <- left_join(h,a,by = "UniqueCarrier")
 h_cancel <- filter(ha,Cancelled == 1)
 
 g_all <- ggplot(ha,aes(Airline,fill=factor(Cancelled))) + 
-  geom_bar() + coord_flip() +
-  theme(legend.position="none") +
+  geom_bar()+  theme(legend.position="none") +
   scale_fill_manual(values=c("darkblue", "orange"))
-#  scale_fill_discrete(name = "Cancellation Reason",
-#                      labels = c("Carrier","weather",
-#                                 "National Air System","Security")) 
+
+# nice plot, but the airline names are unreadable
+g_all
+
+# fixed
+g_fixed <- g_all + coord_flip() 
+g_fixed
 
 g_cancel <- ggplot(h_cancel,aes(Airline,fill=CancellationCode)) + 
   geom_bar() + coord_flip() +
@@ -81,6 +96,5 @@ g_cancel <- ggplot(h_cancel,aes(Airline,fill=CancellationCode)) +
                       labels = c("Carrier","weather",
                                  "National Air System","Security")) 
 
-g_all
 g_cancel
-grid.arrange(g_all,g_cancel,nrow = 1)
+grid.arrange(g_fixed,g_cancel,nrow = 1)

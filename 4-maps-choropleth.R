@@ -1,8 +1,11 @@
 source("1-setup.R")
 # For map data # Get map data for USA 
 states_map <- map_data("state") 
+
 # load cdc data
-load("cdc.rda")
+system.time(load("cdc.rda"))
+system.time(cdc <- tbl_df(cdc))
+
 sw <- cdc[cdc$weight2 < 999,c("x.state","weight2")]
 # get average weight for by state
 #swa <- ddply(sw,.(x.state),summarize,avg.weight = mean(weight2),median.weight = median(weight2))
@@ -10,6 +13,7 @@ swa <- sw %>% group_by(x.state) %>%
               summarize(avg.weight = mean(weight2),
                         median.weight = median(weight2))
 
+swa <- tbl_df(swa)
 names(swa) <- c("fips","avg.weight","median.weight")
 
 # merge state weight data with fips
