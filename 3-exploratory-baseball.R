@@ -6,6 +6,7 @@ source("1-setup.R")
 b <- tbl_df(Batting)
 f <- tbl_df(Fielding)
 t <- tbl_df(Teams)
+p <- tbl_df(Pitching)
 m <- tbl_df(Master)
 
 # create data frame of batting data, adding position from the
@@ -72,3 +73,34 @@ ggplot( data = players.state.loc, aes( x = long, y = lat,
   scale_fill_continuous("Player Count")
 
 
+
+# lets make some pie
+cherry <- m %>% filter(birthCountry != 'USA') %>%
+  group_by(birthCountry) %>%
+  summarize(Players = n()) %>%
+  filter(Players > 50)
+  
+pie(cherry$Players,labels = cherry$birthCountry,
+    col = rainbow(nrow(cherry)),
+    main = "Baseball Players by Country of Birth")
+
+
+# a look at player height and weight
+ggplot(data = m,aes(x = height)) + 
+  geom_histogram(binwidth = 1,fill="blue") + xlim(c(60,85)) + 
+  geom_vline(xintercept=68,color = "red",linetype = "dashed") +
+  geom_vline(xintercept=mean(m$height,na.rm=T),color = "yellow",linetype = "dotdash")
+
+
+m.agg <- filter(m,birthYear > 1900 & birthYear < 1992) %>% 
+  group_by(birthYear) %>%
+  summarize(avg.weight = mean(weight,na.rm = T),
+            avg.height = mean(height,na.rm = T),
+            median.weight = median(weight,na.rm = T),
+            median.height = median(height,na.rm = T),
+            record.count = n())
+
+ggplot(data = m.agg,aes(x = birthYear,y = avg.weight)) + geom_line() +
+  scale_x_continuous(c(1900,1990),
+                     breaks=c(1910,1920,1930,1940,1950,1960,1950,
+                              1960,1970,1980,1990))

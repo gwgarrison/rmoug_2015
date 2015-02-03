@@ -38,9 +38,50 @@ ggplot( weight_map, aes( x = long, y = lat, group = group, fill = avg.weight )) 
   ggtitle("Weight Map for the United States") +
   xlab("") + ylab("") + theme_clean() + 
   theme(plot.title=element_text(family="Times", face="bold", size=20)) +
-  scale_fill_continuous("Average Weight",low="green",high="black")
+  scale_fill_continuous("Average Weight",low="red",high="black")
 #  scale_fill_brewer("Average Weight")
   #scale_color_brewer(type="seq", palette=2) + 
 
 swa[order(swa$avg.weight),c(3,2,4)]
 
+######
+#choroplethr demo
+library(choroplethr);library(acs);library(choroplethrMaps);
+library(zipcode);
+inc <- choroplethr_acs(tableId="B19301",map = "state",buckets = 5)
+inc
+choroplethr_acs(tableId="B20004",map = "state",buckets = 5)
+choroplethr_acs(tableId="B01003",map = "state",buckets = 7)
+choroplethr_acs(tableId="B01003",map = "county",zoom = "colorado", buckets = 7)
+choroplethr_acs(tableId="B19301",map = "county",buckets = 5)
+
+choroplethr_acs(tableId="B19301",map = "county",zoom = "colorado",buckets = 4)
+
+data(county.fips, package="maps")
+df = data.frame(region=county.fips$fips, value=sample(100, nrow(county.fips), replace=TRUE))
+county_choropleth(df, buckets=2)
+data(df_pop_county)
+data(df_president)
+county_choropleth(df_pop_county, title="US 2012 County Population Estimates", legend="Population")
+pres <- state_choropleth(df_president,title="US Presidential Election Results")  + 
+  scale_fill_manual(name="Candidate", values=c("blue", "red"), drop=FALSE)
+pres
+choro = StateChoropleth$new(df_president)
+choro$title = "2012 Election Results"
+choro$ggplot_scale = scale_fill_manual(name="Candidate", values=c("blue", "red"), drop=FALSE)
+choro$render()
+grid.arrange(inc,pres)
+
+# past presidential elections
+data(df_president_ts)
+election_year <- "1988"
+dp <- tbl_df(select(df_president_ts,region,contains(election_year)))
+names(dp) <- c("region","value")
+choro.p = StateChoropleth$new(dp)
+choro.p$title = paste(election_year,"Election Results")
+choro.p$ggplot_scale = scale_fill_manual(name="Candidate", values=c("blue", "red","green"), drop=FALSE)
+choro.p$render()
+
+
+choro <- choro_president("1976")
+suppressWarnings(choro$render())

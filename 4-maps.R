@@ -10,7 +10,8 @@ ap <- tbl_df(select(airports,faa:alt))
 h.ap <- inner_join(h,ap,by = c("Dest" = "faa"))
 h.ap <- dplyr::filter(h.ap,lon > -140)
 
-ggplot(data = h.ap,aes(x = lon,y = lat)) + geom_point() + borders("state")
+# map showing destinations for Houston flights
+ggplot(data = h.ap,aes(x = lon,y = lat)) + geom_point(color = "purple") + borders("state")
 
 # get rid of Alaska and Hawaii to make our map look better
 ggplot(data = filter(h.ap,lon > -140),aes(x = lon,y = lat)) + geom_point(color = "red") + 

@@ -12,6 +12,8 @@ describe(a2)
 describe(a3)
 describe(a4)
 
+cor(anscombe)
+
 # create 4 plots
 par(mfrow=c(2,2))
 
