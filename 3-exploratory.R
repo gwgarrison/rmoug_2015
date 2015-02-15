@@ -5,12 +5,13 @@ d <- tbl_df(diamonds)
 
 ### histograms
 # histogram for price
-g <- ggplot(data = d,aes(x = price)) + geom_histogram(fill = "blue",binwidth=100) + xlab("Price") +
+g <- ggplot(data = d,aes(x = price)) + 
+  geom_histogram(fill = "blue",binwidth=100) + xlab("Price") +
   ylab("Record Count") + ggtitle("Histogram of Diamond Price") 
 g
 
 # lets limit the x-axis so we can see the clump of data
-g +  xlim(c(0,4000))
+g +  xlim(c(0,5000))
 
 
 # lets add some facets
@@ -64,8 +65,8 @@ gc <- ggplot(data = d,aes(x = carat,y = price, color = cut)) +
 gc
 
 # plot with log10 scale
-g.log10 <- gc + scale_x_log10() + scale_y_log10() +
-  scale_color_brewer(palette = "Set3")
+g.log10 <- gc + scale_y_log10() +
+  scale_color_brewer(palette = "Set1")
 g.log10
 
 summary(g)
@@ -78,6 +79,8 @@ h <- tbl_df(hflights)
 # load airline data
 a <- tbl_df(read.csv("L_UNIQUE_CARRIERS.csv",stringsAsFactors=FALSE))
 names(a) <- c("UniqueCarrier","Airline")
+# get rid of extra ExpressJet
+a <- a[-(grep('ExpressJet Airlines Inc. ',a$Airline)),]
 
 h %>% group_by(Cancelled) %>% summarise(n())
 
@@ -111,3 +114,13 @@ g_cancel <- ggplot(h_cancel,aes(Airline,fill=CancellationCode)) +
 g_cancel
 grid.arrange(g_fixed,g_cancel,nrow = 1)
 
+#aggregate airline by cancelled indicator
+ha.agg <- ha %>% select(Airline,Cancelled) %>% 
+  group_by(Airline,Cancelled) %>%
+  summarize(flights = n())
+ha.agg$Cancelled <- factor(ha.agg$Cancelled)
+
+ggplot(data = ha.agg,aes(x = reorder(Airline,flights),y = flights,
+                         fill = Cancelled)) + 
+  geom_bar(stat = 'identity') + coord_flip() + xlab("Airlines") +
+  ylab("Flights")

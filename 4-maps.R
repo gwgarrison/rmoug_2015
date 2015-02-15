@@ -11,8 +11,6 @@ h.ap <- inner_join(h,ap,by = c("Dest" = "faa"))
 h.ap <- dplyr::filter(h.ap,lon > -140)
 
 # map showing destinations for Houston flights
-ggplot(data = h.ap,aes(x = lon,y = lat)) + geom_point(color = "purple") + borders("state")
-
 # get rid of Alaska and Hawaii to make our map look better
 ggplot(data = filter(h.ap,lon > -140),aes(x = lon,y = lat)) + geom_point(color = "red") + 
   borders("state") + ggtitle("Destination Airports")
@@ -25,6 +23,7 @@ h.agg <- h.ap %>%
             median_delay = median(ArrDelay,na.rm = TRUE)) %>%
   arrange(name)
 
+# divide flight by quantiles
 h.agg$flight_quant <- cut(h.agg$flight_count,breaks = quantile(h.agg$flight_count),
                           labels = c(1,2,3,4))
             

@@ -16,14 +16,11 @@ brew_map_1 <- ggmap(map, extent = 'device') + geom_point(aes(x = lon,y = lat)
 brew_map_1
 ggsave(brew_map_1,file="micro_brew_map.png")
 
-ggmap(map, extent = 'device') + geom_point(aes(x = lon,y = lat,size=bp.city$pub.count)
-                                           ,data = bp.city,color="red") +
-  xlab("") + ylab("")
 
 # list brew pubs
 bp[order(bp$city),c(2,4)]
 
-bp <- read.csv("brew_pubs_city.csv",stringsAsFactors=FALSE)
+#bp <- read.csv("brew_pubs_city.csv",stringsAsFactors=FALSE)
 
 map <- suppressMessages(get_map(location = 'colorado',zoom = 7,maptype="roadmap"))
 b <- ggmap(map, extent = 'device') + geom_point(aes(x = lon,y = lat,size=bp.city$pub.count)

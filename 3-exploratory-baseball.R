@@ -25,10 +25,7 @@ g <- ggplot(data = t.year,aes(x = year,y = hr_game)) + geom_point() +
   ggtitle("Homeruns Per/Game by Year") + 
   geom_vline(xintercept = 2003,color = "red")
 g
-g <- g +geom_smooth(method = 'lm') 
-g
-g <- g + geom_smooth(method = 'lm') 
-g
+
 # change the geom to a line
 gline <- ggplot(data = t.year,aes(x = year,y = hr_game)) + geom_line() +
   xlab("Year") + ylab("HR/Game") + 
@@ -88,10 +85,10 @@ pie(cherry$Players,labels = cherry$birthCountry,
 # a look at player height and weight
 ggplot(data = m,aes(x = height)) + 
   geom_histogram(binwidth = 1,fill="blue") + xlim(c(60,85)) + 
-  geom_vline(xintercept=68,color = "red",linetype = "dashed") +
+  geom_vline(xintercept=69,color = "red",linetype = "dashed") +
   geom_vline(xintercept=mean(m$height,na.rm=T),color = "yellow",linetype = "dotdash")
 
-
+# aggregate weight and height data by year
 m.agg <- filter(m,birthYear > 1900 & birthYear < 1992) %>% 
   group_by(birthYear) %>%
   summarize(avg.weight = mean(weight,na.rm = T),
